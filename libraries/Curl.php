@@ -14,6 +14,7 @@
  */
 class Curl {
 
+    public $enable_log = false;
     protected $response = '';       // Contains the cURL response for debug
     protected $session;             // Contains the cURL handler for a session
     protected $url;                 // URL of the session
@@ -25,14 +26,18 @@ class Curl {
 
     function __construct($url = '')
     {
-        Log::write('debug', 'cURL Class Initialized');
+        $this->log('debug', 'cURL Class Initialized');
 
         if ( ! $this->is_enabled())
         {
-            Log::write('error', 'cURL Class - PHP was not built with cURL enabled. Rebuild PHP with --with-curl to use cURL.');
+            $this->log('error', 'cURL Class - PHP was not built with cURL enabled. Rebuild PHP with --with-curl to use cURL.');
         }
 
         $url AND $this->create($url);
+    }
+
+    private function log($mode, $message){
+        if ($this->enable_log) Log::write($mode, $message);
     }
 
     public function __call($method, $arguments)
